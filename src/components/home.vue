@@ -164,4 +164,7 @@ export default {
 .iconfont {
   margin-right: 10px;
 }
+.el-main {
+  background: #e8ecef;
+}
 </style>
