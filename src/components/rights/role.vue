@@ -3,11 +3,15 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+      <el-breadcrumb-item>角色管理</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
       <el-button type="primary">添加角色</el-button>
-      <el-table :data="roleList" border>
+      <el-table
+        :data="roleList"
+        border
+        :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
+      >
         <el-table-column type="expand">
           <template slot-scope="{ row }">
             <el-row
@@ -60,7 +64,8 @@
         <el-table-column
           align="center"
           type="index"
-          label="#"
+          label="序号"
+          width="50px"
         ></el-table-column>
         <el-table-column
           align="center"
@@ -73,20 +78,42 @@
           prop="roleDesc"
         ></el-table-column>
         <el-table-column align="center" label="操作">
-          <template>
+          <template slot-scope="{ row }">
             <el-button type="primary" icon="el-icon-edit" size="mini"
               >编辑</el-button
             >
             <el-button type="danger" icon="el-icon-delete" size="mini"
               >删除</el-button
             >
-            <el-button type="warning" icon="el-icon-setting" size="mini"
+            <el-button
+              type="warning"
+              icon="el-icon-setting"
+              size="mini"
+              @click="assign(row)"
               >分配权限</el-button
             >
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+    <el-dialog title="分配权限" :visible.sync="assignDialogVisible" width="30%">
+      <el-tree
+        :data="permissionData"
+        show-checkbox
+        node-key="id"
+        :props="defaultProps"
+        :default-expanded-keys="defKeys"
+        :default-checked-keys="defKeys"
+        accordion
+      >
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="assignDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="assignDialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -122,7 +149,7 @@ export default {
               children: [
                 {
                   authName: '角色列表',
-                  id: 121,
+                  id: 12222,
                   children: [
                     {
                       authName: '角色授权',
@@ -176,6 +203,84 @@ export default {
           ],
         },
       ],
+      assignDialogVisible: false,
+      defaultProps: {
+        children: 'children',
+        label: 'label',
+      },
+      permissionData: [
+        {
+          id: 11,
+          label: '商品管理',
+          children: [
+            {
+              id: 11,
+              label: '商品列表',
+              children: [
+                { id: 110, label: '添加商品' },
+                { id: 113, label: '商品修改' },
+                { id: 112, label: '商品删除' },
+              ],
+            },
+            {
+              id: 1243,
+              label: '分类参数',
+              children: [
+                { id: 121, label: '获取参数列表' },
+                { id: 122, label: '创建商品参数' },
+                { id: 123, label: '删除商品参数' },
+              ],
+            },
+            {
+              id: 111,
+              label: '商品分类',
+              children: [
+                { id: 1111, label: '添加分类' },
+                { id: 132, label: '删除分类' },
+                { id: 133, label: '获取分类详情' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          label: '订单管理',
+          children: [
+            {
+              id: 21,
+              label: '订单列表',
+              children: [
+                { id: 210, label: '添加订单' },
+                { id: 211, label: '订单更新' },
+                { id: 212, label: '获取订单详情' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 12,
+          label: '权限管理',
+          children: [
+            {
+              id: 12222,
+              label: '角色列表',
+              children: [
+                { id: 1211, label: '角色授权' },
+                { id: 1212, label: '取消角色授权' },
+              ],
+            },
+            {
+              id: 1212,
+              label: '角色列表2',
+              children: [
+                { id: 320, label: '角色授权2' },
+                { id: 321, label: '取消角色授权2' },
+              ],
+            },
+          ],
+        },
+      ],
+      defKeys: [],
     }
   },
   created() {},
@@ -193,6 +298,20 @@ export default {
         return err
       })
       console.log(result)
+    },
+    assign(role) {
+      this.assignDialogVisible = true
+      this.getKeys(role, this.defKeys)
+      console.log(this.defKeys)
+    },
+    getKeys(node, arr) {
+      if (!node.children) {
+        arr.push(node.id)
+      } else {
+        node.children.forEach((item) => {
+          return this.getKeys(item, arr)
+        })
+      }
     },
   },
 }
