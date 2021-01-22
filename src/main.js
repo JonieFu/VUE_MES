@@ -10,13 +10,14 @@ import axios from 'axios'
 
 Vue.config.productionTip = false
 
-// 后端请求的配置,等后端写好接口后再写
+// 后端请求的配置, 等后端写好接口后再写
 // Vue.prototype.$http = axios
-// axios.defaults.baseURL = "后端接口"
+// axios.defaults.baseURL = "https://www.fastmock.site/mock/025dca434d66db454ba876e92148abb8/vue_mes"
 // axios.interceptors.request.use(config => {
 //   config.headers.Authorization = window.sessionStorage.getItem('token')
 //   return config
 // })
+
 Vue.filter('dataFormat', function (originVal) {
   const dt = new Date(originVal)
   const y = dt.getFullYear()

@@ -41,8 +41,7 @@ const routes = [
       { path: '/maintenance', name: 'Maintenance', component: Maintenance },
       { path: '/contract', name: 'Contract', component: Contract },
       { path: '/purchas_order', name: 'Purchas_order', component: Purchas_order },
-      { path: '/return_order', name: 'Return_order', component: Return_order }
-
+      { path: '/return_order', name: 'Return_order', component: Return_order },
 
     ]
   }

@@ -20,8 +20,17 @@
           ></el-col
         >
       </el-row>
-      <el-table :data="userlist" border>
-        <el-table-column type="index"></el-table-column>
+      <el-table
+        :data="userlist"
+        border
+        :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
+      >
+        <el-table-column
+          align="center"
+          type="index"
+          label="序号"
+          width="50px"
+        ></el-table-column>
         <el-table-column
           align="center"
           label="姓名"

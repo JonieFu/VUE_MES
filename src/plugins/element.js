@@ -5,7 +5,7 @@ import {
   TableColumn, Row, Col, Container, Header, Aside,
   Menu, Submenu, MenuItemGroup, MenuItem, Main,
   Dialog, BreadcrumbItem, Switch, Tooltip, MessageBox,
-  Select, Option,
+  Select, Option, Tag, Checkbox, Tree
 } from 'element-ui'
 
 Vue.use(Button)
@@ -33,5 +33,8 @@ Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Tag)
+Vue.use(Checkbox)
+Vue.use(Tree)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox
