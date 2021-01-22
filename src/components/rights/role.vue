@@ -6,7 +6,7 @@
       <el-breadcrumb-item>角色管理</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
-      <el-button type="primary">添加角色</el-button>
+      <el-button type="primary" @click="addRole">添加角色</el-button>
       <el-table
         :data="roleList"
         border
@@ -96,7 +96,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-dialog title="分配权限" :visible.sync="assignDialogVisible" width="30%">
+    <el-dialog title="分配权限" :visible.sync="assignDialogVisible" width="50%">
       <el-tree
         :data="permissionData"
         show-checkbox
@@ -110,6 +110,27 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="assignDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="assignDialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="添加角色"
+      :visible.sync="addRoleDialogVisible"
+      width="50%"
+      :before-close="handleClose"
+    >
+      <el-form :model="addForm" label-width="80px">
+        <el-form-item label="角色名称"
+          ><el-input v-model="addForm.name"></el-input
+        ></el-form-item>
+        <el-form-item label="角色描述"
+          ><el-input v-model="addForm.description"></el-input
+        ></el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
           >确 定</el-button
         >
       </span>
@@ -281,6 +302,11 @@ export default {
         },
       ],
       defKeys: [],
+      addRoleDialogVisible: false,
+      addForm: {
+        name: '',
+        description: '',
+      },
     }
   },
   created() {},
@@ -302,7 +328,6 @@ export default {
     assign(role) {
       this.assignDialogVisible = true
       this.getKeys(role, this.defKeys)
-      console.log(this.defKeys)
     },
     getKeys(node, arr) {
       if (!node.children) {
@@ -312,6 +337,9 @@ export default {
           return this.getKeys(item, arr)
         })
       }
+    },
+    addRole() {
+      this.addRoleDialogVisible = true
     },
   },
 }
