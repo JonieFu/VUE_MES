@@ -53,17 +53,6 @@ export default {
     return {
       menulist: [
         {
-          authName: '用户管理',
-          id: 0,
-          children: [
-            {
-              authName: '用户列表',
-              id: 100,
-              path: 'user',
-            },
-          ],
-        },
-        {
           authName: '权限管理',
           id: 1,
           children: [
@@ -76,32 +65,83 @@ export default {
         },
         {
           authName: '基础数据',
-          id: 2,
+          id: 3,
           children: [
+            { authName: 'BOM清单', id: 20, path: 'bom' },
+            { authName: '字典设置', id: 23, path: 'dict' },
             { authName: '基础数据配置', id: 21, path: 'configuration' },
             { authName: '基础数据维护', id: 22, path: 'maintenance' },
+            { authName: '工艺路线', id: 25, path: 'process' },
           ],
         },
         {
-          authName: '合同管理',
-          id: 3,
-          children: [{ authName: '合同管理', id: 31, path: 'contract' }],
-        },
-        {
-          authName: '采购管理',
-          id: 4,
+          authName: '业务模块',
+          id: 2,
           children: [
+            { authName: '销售订单', id: 25, path: 'sales_order' },
             { authName: '采购单', id: 41, path: 'purchas_order' },
             { authName: '退货单', id: 42, path: 'return_order' },
+            { authName: '合同管理', id: 23, path: 'contract' },
+          ],
+        },
+        {
+          authName: '物料管理',
+          id: 4,
+          children: [
+            { authName: '重点原材料库存', id: 33, path: 'raw' },
+            { authName: '物料入库', id: 31, path: 'itemIn' },
+            { authName: '物料出库', id: 32, path: 'itemOut' },
+          ],
+        },
+        {
+          authName: '生产管理',
+          id: 7,
+          children: [
+            { authName: '初较', id: 71, path: 'cj' },
+            { authName: '上电初检', id: 72, path: 'sdcj' },
+            { authName: '耐压', id: 73, path: 'ny' },
+            { authName: '复校', id: 74, path: 'fj' },
+            { authName: '图像结论表', id: 75, path: 'txjlb' },
+            { authName: '生产订单', id: 76, path: 'scdd' },
+            { authName: '豆码对比', id: 77, path: 'dmdb' },
+            { authName: '排产计划', id: 78, path: 'pcjh' },
+            { authName: '生产数据豆码', id: 79, path: 'scsjdm' },
+            { authName: '生产数据来源', id: 80, path: 'scsjly' },
+            { authName: '工单', id: 81, path: 'gd' },
+            { authName: '报工信息', id: 82, path: 'bgxx' },
+          ],
+        },
+        {
+          authName: '质量管理',
+          id: 5,
+          children: [
+            { authName: '压敏电阻', id: 51, path: 'ymdz' },
+            { authName: '光电耦合器', id: 52, path: 'gdohq' },
+            { authName: '晶体谐振器', id: 53, path: 'jtxzq' },
+            { authName: '瞬变二极管', id: 54, path: 'sbejg' },
+            { authName: '电池', id: 55, path: 'dc' },
+            { authName: '液晶', id: 56, path: 'yj' },
+            { authName: '电流互感器', id: 57, path: 'dlhgq' },
+            { authName: '成品检测', id: 58, path: 'cpjc' },
+          ],
+        },
+        {
+          authName: '设备管理',
+          id: 6,
+          children: [
+            { authName: '设备故障管理', id: 61, path: 'sbgzgl' },
+            { authName: '设备日常维护', id: 62, path: 'sbrcwh' },
           ],
         },
       ],
       iconsObj: {
-        0: 'iconfont icon-user',
         1: 'iconfont icon-xitongguanli',
         2: 'iconfont icon-shuju',
-        3: 'iconfont icon-hetong',
+        3: 'iconfont icon-caigou',
         4: 'iconfont icon-caigou',
+        5: 'iconfont icon-shujubaobiao',
+        6: 'iconfont icon-shujubaobiao',
+        7: 'iconfont icon-shujubaobiao',
       },
       isCollapse: false,
       activePath: '',

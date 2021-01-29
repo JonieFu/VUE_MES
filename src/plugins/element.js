@@ -5,7 +5,7 @@ import {
   TableColumn, Row, Col, Container, Header, Aside,
   Menu, Submenu, MenuItemGroup, MenuItem, Main,
   Dialog, BreadcrumbItem, Switch, Tooltip, MessageBox,
-  Select, Option, Tag, Checkbox, Tree
+  Select, Option, Tag, Checkbox, Tree, DatePicker, Upload, CheckboxGroup,
 } from 'element-ui'
 
 Vue.use(Button)
@@ -36,5 +36,8 @@ Vue.use(Option)
 Vue.use(Tag)
 Vue.use(Checkbox)
 Vue.use(Tree)
+Vue.use(DatePicker)
+Vue.use(Upload)
+Vue.use(CheckboxGroup)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox
