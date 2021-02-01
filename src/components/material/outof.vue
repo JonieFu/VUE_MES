@@ -6,14 +6,14 @@
       <el-breadcrumb-item>物料出库</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card
-      ><el-form ref="libraryForm" :model="SearchForm" size="small">
+      ><el-form ref="itemOfForm" :model="SearchForm" size="small">
         <el-row :gutter="10">
           <el-col :span="4"
-            ><el-form-item label="入库单号" label-width="70px" prop="rkdh"
+            ><el-form-item label="出库单号" label-width="70px" prop="rkdh"
               ><el-input v-model="SearchForm.rkdh"></el-input></el-form-item
           ></el-col>
           <el-col :span="4"
-            ><el-form-item label="入库单名称" label-width="90px" prop="rkdmc"
+            ><el-form-item label="出库单名称" label-width="90px" prop="rkdmc"
               ><el-input v-model="SearchForm.rkdmc"></el-input></el-form-item
           ></el-col>
           <el-col :span="4"
@@ -60,33 +60,38 @@
           <el-table-column align="center" type="selection"></el-table-column>
           <el-table-column
             align="center"
-            prop="rkdh"
-            label="入库单号"
+            prop="ckdh"
+            label="出库单号"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="rkdmc"
-            label="入库单名称"
+            prop="ckdmc"
+            label="出库单名称"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="rkclmc"
-            label="入库材料名称"
+            prop="ckclmc"
+            label="出库材料名称"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="bcrkclsl"
-            label="本次入库材料数量"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="zkcsl"
-            label="总库存数量"
+            prop="ckclsl"
+            label="出库材料数量"
           ></el-table-column>
           <el-table-column
             align="center"
             prop="jldw"
             label="计量单位"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="scddbh"
+            label="生产订单编号"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="scddmc"
+            label="生产订单名称"
           ></el-table-column>
           <el-table-column
             align="center"
@@ -121,8 +126,38 @@
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="BOMwlmc"
+            prop="Bomwlmc"
             label="BOM物料名称"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="bomggxh"
+            label="BOM规格型号"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="bomsh"
+            label="BOM色号"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="bomcz"
+            label="BOM材质"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="bomggdw"
+            label="BOM规格单位"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="bomscyl"
+            label="BOM生产用量"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="bomjjdw"
+            label="BOM计价单位"
           ></el-table-column>
           <el-table-column
             align="center"
@@ -199,102 +234,117 @@
       </el-card>
     </el-card>
     <el-dialog
-      title="添加入库单"
+      title="添加出库单"
       :visible.sync="addLibraryDialogVisible"
       width="50%"
     >
       <div class="el-dialog-div">
-        <el-form ref="rawform" :model="addlibraryForm" label-width="130px">
-          <el-form-item label="入库单号" prop="rkdh"
-            ><el-input v-model="addlibraryForm.rkdh" placeholder=""></el-input>
+        <el-form ref="itemOfForm" :model="additemOfForm" label-width="130px">
+          <el-form-item label="出库单号" prop="ckdh"
+            ><el-input v-model="additemOfForm.ckdh" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="入库单名称" prop="gysmc"
-            ><el-input v-model="addlibraryForm.rkdmc" placeholder=""></el-input>
+          <el-form-item label="出库单名称" prop="ckdmc"
+            ><el-input v-model="additemOfForm.ckdmc" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="入库材料名称" prop="rkclmc"
-            ><el-input
-              v-model="addlibraryForm.rkclmc"
-              placeholder=""
-            ></el-input>
+          <el-form-item label="出库材料名称" prop="ckclmc"
+            ><el-input v-model="additemOfForm.ckclmc" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="本次入库材料数量" prop="bcrkclsl"
-            ><el-input
-              v-model="addlibraryForm.bcrkclsl"
-              placeholder=""
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="总库存数量" prop="zkcsl"
-            ><el-input v-model="addlibraryForm.zkcsl" placeholder=""></el-input>
+          <el-form-item label="出库材料数量" prop="ckclsl"
+            ><el-input v-model="additemOfForm.ckclsl" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="计量单位" prop="jldw"
-            ><el-input v-model="addlibraryForm.jldw" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.jldw" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="生产订单编号" prop="scddbh"
+            ><el-input v-model="additemOfForm.scddbh" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="生产订单名称" prop="scddmc"
+            ><el-input v-model="additemOfForm.scddmc" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="采购订单编号" prop="cgddbh"
-            ><el-input
-              v-model="addlibraryForm.cgddbh"
-              placeholder=""
-            ></el-input>
+            ><el-input v-model="additemOfForm.cgddbh" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="采购订单名称" prop="cgddmc"
-            ><el-input
-              v-model="addlibraryForm.cgddmc"
-              placeholder=""
-            ></el-input>
+            ><el-input v-model="additemOfForm.cjr" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="创建人" prop="cjr"
-            ><el-input v-model="addlibraryForm.cjr" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.cjr" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="创建时间" prop="cjsj"
-            ><el-input v-model="addlibraryForm.cjsj" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.cjsj" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="更新时间" prop="gxsj"
-            ><el-input v-model="addlibraryForm.gxsj" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.gxsj" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="BOM编号" prop="bombh"
-            ><el-input v-model="addlibraryForm.bombh" placeholder=""></el-input>
-          </el-form-item>
-          <el-form-item label="BOM物料名称" prop="BOMwlmc"
-            ><el-input
-              v-model="addlibraryForm.BOMwlmc"
-              placeholder=""
-            ></el-input>
+            ><el-input v-model="additemOfForm.bombh" placeholder=""></el-input>
           </el-form-item>
 
-          <el-form-item label="供货单位" prop="ghdw"
+          <el-form-item label="BOM物料名称" prop="Bomwlmc"
             ><el-input
-              v-model="addlibraryForm.BOMwlmc"
+              v-model="additemOfForm.Bomwlmc"
               placeholder=""
             ></el-input>
           </el-form-item>
+          <el-form-item label="BOM规格型号" prop="bomggxh"
+            ><el-input
+              v-model="additemOfForm.bomggxh"
+              placeholder=""
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM色号" prop="bomsh"
+            ><el-input v-model="additemOfForm.bomsh" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="BOM材质" prop="bomcz"
+            ><el-input v-model="additemOfForm.bomcz" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="BOM规格单位" prop="bomggdw"
+            ><el-input
+              v-model="additemOfForm.bomggdw"
+              placeholder=""
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM生产用量" prop="bomscyl"
+            ><el-input
+              v-model="additemOfForm.bomscyl"
+              placeholder=""
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM计价单位" prop="bomjjdw"
+            ><el-input
+              v-model="additemOfForm.bomjjdw"
+              placeholder=""
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供货单位" prop="ghdw"
+            ><el-input v-model="additemOfForm.ghdw" placeholder=""></el-input>
+          </el-form-item>
           <el-form-item label="供货日期" prop="ghrq"
-            ><el-input v-model="addlibraryForm.ghrq" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.ghrq" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="交货日期" prop="jhrq"
-            ><el-input v-model="addlibraryForm.jhrq" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.jhrq" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="供货联系人" prop="ghlxr"
-            ><el-input v-model="addlibraryForm.ghlxr" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.ghlxr" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="供货商联系电话" prop="ghslxdh"
             ><el-input
-              v-model="addlibraryForm.ghslxdh"
+              v-model="additemOfForm.ghslxdh"
               placeholder=""
             ></el-input>
           </el-form-item>
           <el-form-item label="收货地址" prop="shdz"
-            ><el-input v-model="addlibraryForm.shdz" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.shdz" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="销售订单号" prop="xsddh"
-            ><el-input v-model="addlibraryForm.xsddh" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.xsddh" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="销售订单名称" prop="xsddmc"
-            ><el-input
-              v-model="addlibraryForm.xsddmc"
-              placeholder=""
-            ></el-input>
+            ><el-input v-model="additemOfForm.xsddmc" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="bz"
-            ><el-input v-model="addlibraryForm.bz" placeholder=""></el-input>
+            ><el-input v-model="additemOfForm.bz" placeholder=""></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -311,54 +361,68 @@ export default {
   data() {
     return {
       SearchForm: {
-        rkdh: '',
-        rkdmc: '',
+        ckdh: '',
+        ckdmc: '',
         cgddbh: '',
         cgddmc: '',
       },
       tableList: [
         {
-          rkdh: 'ds',
-          rkdmc: 'sdf',
-          rkclmc: 'sdf',
-          bcrkclsl: 'saf',
-          zkcsl: 'sdf',
-          jldw: 'jlgk',
-          cgddbh: 'dsgz',
-          cgddmc: 'fg',
-          cjr: 'zcx',
-          cjsj: 'dfg',
-          gxsj: 'xd',
-          bombh: 'sdf',
-          BOMwlmc: 'sdf',
-          ghdw: 'sdf',
-          ghrq: 'sdf',
-          jhrq: 'sdfs',
-          ghlxr: 'sdf',
-          ghslxdh: 'sdfs',
-          shdz: 'sdfsd',
-          xsddh: 'sdfs',
-          xsddmc: 'sdf',
-          bz: 'sdfs',
+          ckdh: 'ds',
+          ckdmc: 'sdf',
+          ckclmc: 'sdf',
+          ckclsl: 'saf',
+          jldw: 'sdf',
+          scddbh: 'jlgk',
+          scddmc: 'dsgz',
+          cgddbh: 'fg',
+          cgddmc: 'zcx',
+          cjr: 'dfg',
+          cjsj: 'xd',
+          gxsj: 'sdf',
+          bombh: 'dsf',
+          Bomwlmc: 'sdf',
+          bomggxh: 'sdf',
+          bomsh: 'sdf',
+          bomcz: 'sdfs',
+          bomggdw: 'sdf',
+          bomscyl: 'sdfs',
+          bomjjdw: 'sdfsd',
+          ghdw: 'sdfs',
+          ghrq: 'fgdsf',
+          jhrq: 'sdf',
+          ghlxr: 'sdfs',
+          ghslxdh: 'dfsdf',
+          shdz: 'dsfdgf',
+          xsddh: 'dsfd',
+          xsddmc: 'dsfd',
+          bz: 'sdsf',
         },
       ],
       currentPage: 1,
       href: '',
       addLibraryDialogVisible: false,
-      addlibraryForm: {
-        rkdh: '',
-        rkdmc: '',
-        rkclmc: '',
-        bcrkclsl: '',
-        zkcsl: '',
+      additemOfForm: {
+        ckdh: '',
+        ckdmc: '',
+        ckclmc: '',
+        ckclsl: '',
         jldw: '',
+        scddbh: '',
+        scddmc: '',
         cgddbh: '',
         cgddmc: '',
         cjr: '',
         cjsj: '',
         gxsj: '',
         bombh: '',
-        BOMwlmc: '',
+        Bomwlmc: '',
+        bomggxh: '',
+        bomsh: '',
+        bomcz: '',
+        bomggdw: '',
+        bomscyl: '',
+        bomjjdw: '',
         ghdw: '',
         ghrq: '',
         jhrq: '',
@@ -373,19 +437,21 @@ export default {
   },
   created() {
     this.href = window.location.href
-    console.log(this.href)
   },
   methods: {
     export() {},
     search() {},
     reset() {
-      this.$refs.libraryForm.resetFields()
+      this.$refs.itemOfForm.resetFields()
     },
     addlibrary() {
       this.addLibraryDialogVisible = true
     },
     submit() {
+      console.log('1234343')
       this.addLibraryDialogVisible = false
+      console.log(this.$refs.itemOfForm)
+      this.$refs.itemOfForm.resetFields()
     },
   },
 }
