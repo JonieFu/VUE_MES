@@ -3,7 +3,7 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>业务模块</el-breadcrumb-item>
-      <el-breadcrumb-item>销售订单</el-breadcrumb-item>
+      <el-breadcrumb-item>子合同管理</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card
       ><el-form ref="salesForm" :model="salesForm" size="small">
@@ -16,8 +16,8 @@
               ><el-input v-model="salesForm.cgfzbbm"></el-input></el-form-item
           ></el-col>
           <el-col :span="4"
-            ><el-form-item label="销售订单号" label-width="90px" prop="xsdd"
-              ><el-input v-model="salesForm.xsdd"></el-input></el-form-item
+            ><el-form-item label="子合同编号" label-width="90px" prop="zhtbh"
+              ><el-input v-model="salesForm.zhtbh"></el-input></el-form-item
           ></el-col>
           <el-col :span="4"
             ><el-form-item label="供应商编码" label-width="90px" prop="gysbm"
@@ -58,13 +58,13 @@
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="xsddh"
-            label="销售订单号"
+            prop="zhtbh"
+            label="子合同编号"
           ></el-table-column>
           <el-table-column
             align="center"
             prop="xsddmc"
-            label="销售订单名称"
+            label="子合同名称"
           ></el-table-column>
           <el-table-column
             align="center"
@@ -182,7 +182,7 @@
       </el-card>
     </el-card>
     <el-dialog
-      title="添加销售订单"
+      title="添加子合同"
       :visible.sync="addSalesDialogVisible"
       width="50%"
     >
@@ -193,121 +193,121 @@
           label-width="150px"
           size="small"
         >
-          <el-form-item label="采购方总部编码" prop="bomnum"
+          <el-form-item label="采购方总部编码" prop="cgfzbbm"
             ><el-input
               v-model="addsaleslist.cgfzbbm"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="销售订单编号" prop="xsnum"
+          <el-form-item label="子合同编号" prop="zhtbh"
             ><el-input
-              v-model="addsaleslist.xsddh"
+              v-model="addsaleslist.zhtbh"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="销售订单名称" prop="xsname"
+          <el-form-item label="子合同名称" prop="zhtmc"
             ><el-input
-              v-model="addsaleslist.xsddmc"
+              v-model="addsaleslist.zhtmc"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="物料名称" prop="wl"
+          <el-form-item label="供应航编码" prop="gysbm"
             ><el-input
               v-model="addsaleslist.gysbm"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="规格型号" prop="gg"
+          <el-form-item label="采购方公司编码" prop="cgfgsbm"
             ><el-input
               v-model="addsaleslist.cgfgsbm"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="材质" prop="cz"
+          <el-form-item label="采购方公司名称" prop="cgfgsmc"
             ><el-input
               v-model="addsaleslist.cgfgsmc"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="色号" prop="sh"
+          <el-form-item label="采购方公司省份" prop="cgfgssf"
             ><el-input
               v-model="addsaleslist.cgfgssf"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="规格单位" prop="ggdw"
+          <el-form-item label="品类编码" prop="plbm"
             ><el-input
               v-model="addsaleslist.plbm"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="生产用量" prop="scyl"
+          <el-form-item label="种类编码" prop="zlbm"
             ><el-input
               v-model="addsaleslist.zlbm"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="计价单位" prop="jjdw"
+          <el-form-item label="子合同状态" prop="zhtzt"
             ><el-input
-              v-model="addsaleslist.xsddzt"
+              v-model="addsaleslist.zhtzt"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="销售订单状态" prop="jjdw"
+          <el-form-item label="销售订单行项目号" prop="xsddhxmh"
             ><el-input
               v-model="addsaleslist.xsddhxmh"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="销售订单行项目ID" prop="jjdw"
+          <el-form-item label="销售订单行项目ID" prop="xsddhxmId"
             ><el-input
-              v-model="addsaleslist.cgddhxmid"
+              v-model="addsaleslist.xsddhxmId"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="物料编码" prop="jjdw"
+          <el-form-item label="物资编码" prop="wzbm"
             ><el-input
               v-model="addsaleslist.wzbm"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="物资名称" prop="jjdw"
+          <el-form-item label="物资名称" prop="wzmc"
             ><el-input
               v-model="addsaleslist.wzmc"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="物资单位" prop="jjdw"
+          <el-form-item label="物资单位" prop="wzdw"
             ><el-input
               v-model="addsaleslist.wzdw"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="物资数量" prop="jjdw"
+          <el-form-item label="物资数量" prop="wzsl"
             ><el-input
               v-model="addsaleslist.wzsl"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="数据拥有方" prop="jjdw"
+          <el-form-item label="数据拥有方" prop="sjyyf"
             ><el-input
               v-model="addsaleslist.sjyyf"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="数据可见方" prop="jjdw"
+          <el-form-item label="数据可见方" prop="sjkjf"
             ><el-input
               v-model="addsaleslist.sjkjf"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="数据来源" prop="jjdw"
+          <el-form-item label="数据来源" prop="sjly"
             ><el-input
               v-model="addsaleslist.sjly"
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="来源数据创建时间" prop="jjdw"
+          <el-form-item label="来源数据创建时间" prop="lysjcjsj"
             ><el-input
               v-model="addsaleslist.lysjcjsj"
               style="width: 90%"
@@ -329,7 +329,7 @@ export default {
     return {
       salesForm: {
         cgfzbbm: '',
-        xsdd: '',
+        zhtbh: '',
         gysbm: '',
       },
       tableList: [
@@ -357,7 +357,7 @@ export default {
         },
       ],
       addsaleslist: {
-        cgfzbbm: '',
+        cgfzbbm: 'qw',
         xsddh: '',
         xsddmc: '',
         gysbm: '',
@@ -366,7 +366,7 @@ export default {
         cgfgssf: '',
         plbm: '',
         zlbm: '',
-        xsddzt: '',
+        zhtzt: 1,
         xsddhxmh: '',
         cgddhxmid: '',
         wzbm: '',

@@ -129,7 +129,7 @@
       </el-card>
     </el-card>
     <el-dialog
-      title="添加上电初检单"
+      title="添加耐压检验单"
       :visible.sync="addnyFormDialogVisible"
       width="50%"
     >

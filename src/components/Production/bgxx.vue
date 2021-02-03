@@ -218,7 +218,7 @@
       </el-card>
     </el-card>
     <el-dialog
-      title="添加入库单"
+      title="添加报工信息单"
       :visible.sync="addbgxxDialogVisible"
       width="50%"
     >
