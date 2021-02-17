@@ -6,6 +6,9 @@ import './assets/css/global.css'
 import './assets/fonts/iconfont.css'
 import './assets/fonts/iconfont.js'
 import axios from 'axios'
+// import JsonExcel from 'vue-json-excel'
+// Vue.component('downloadExcel', JsonExcel)
+
 
 
 Vue.config.productionTip = false

@@ -254,7 +254,7 @@ export default {
   },
   created() {
     this.href = window.location.href
-    console.log(this.href)
+    
   },
   methods: {
     export() {},

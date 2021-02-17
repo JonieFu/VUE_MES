@@ -45,21 +45,37 @@
         </el-row>
       </el-form>
       <el-card>
-        <el-row>
+        <el-row :gutter="30">
           <el-col :span="1">
             <el-button type="primary" size="mini" @click="addBOM"
               >添加</el-button
             >
           </el-col>
           <el-col :span="1">
-            <el-button type="primary" size="mini">
-              <a class="export">导出</a>
+            <el-button type="primary" size="mini" @click="modifyBOM"
+              >修改</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button type="danger" size="mini" @click="deleteBOM"
+              >批量删除</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button
+              style="margin-left: 24px"
+              type="primary"
+              size="mini"
+              @click="exportData"
+            >
+              导出
             </el-button>
           </el-col>
         </el-row>
         <el-table
           :data="tableList"
           border
+          @selection-change="handleSelectionChange"
           :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
         >
           <el-table-column align="center" type="selection"></el-table-column>
@@ -114,11 +130,19 @@
             label="计价单位"
           ></el-table-column>
           <el-table-column align="center" label="操作" width="200px">
-            <template>
-              <el-button type="primary" icon="el-icon-edit" size="mini"
+            <template slot-scope="{ row, $index }">
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                size="mini"
+                @click="edit(row, $index)"
                 >编辑</el-button
               >
-              <el-button type="danger" icon="el-icon-delete" size="mini"
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                @click="remove($index)"
                 >删除</el-button
               >
             </template>
@@ -162,6 +186,50 @@
             </el-form-item>
             <el-form-item label="计价单位" prop="jjdw"
               ><el-input v-model="addForm.jjdw" placeholder=""></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addBomDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
+        </span>
+      </el-dialog>
+      <el-dialog
+        title="编辑BOM清单"
+        :visible.sync="editBomDialogVisible"
+        width="50%"
+      >
+        <div class="el-dialog-div">
+          <el-form ref="form" :model="editForm" label-width="100px">
+            <el-form-item label="BOM编号" prop="bomnum"
+              ><el-input v-model="editForm.bomnum" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="销售订单编号" prop="xsnum"
+              ><el-input v-model="editForm.xsnum" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="销售订单名称" prop="xsname"
+              ><el-input v-model="editForm.xsname" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="物料名称" prop="wl"
+              ><el-input v-model="editForm.wl" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="规格型号" prop="gg"
+              ><el-input v-model="editForm.gg" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="材质" prop="cz"
+              ><el-input v-model="editForm.cz" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="色号" prop="sh"
+              ><el-input v-model="editForm.sh" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="规格单位" prop="ggdw"
+              ><el-input v-model="editForm.ggdw" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="生产用量" prop="scyl"
+              ><el-input v-model="editForm.scyl" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="计价单位" prop="jjdw"
+              ><el-input v-model="editForm.jjdw" placeholder=""></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -235,7 +303,16 @@ export default {
           jjdw: '元',
         },
       ],
+      tableTitle: [
+        { label: 'BOM编号', prop: 'bomnum' },
+        { label: '销售订单编号', prop: 'xsnum' },
+        { label: '销售订单名称', prop: 'xsname' },
+        { label: '物料名称', prop: 'wl' },
+        { label: '规格型号', prop: 'gg' },
+        { label: '材质', prop: 'cz' },
+      ],
       addBomDialogVisible: false,
+      editBomDialogVisible: false,
       addForm: {
         bomnum: '',
         xsnum: '',
@@ -248,13 +325,69 @@ export default {
         scyl: '',
         jjdw: '',
       },
+      editForm: {
+        bomnum: '',
+        xsnum: '',
+        xsname: '',
+        wl: '',
+        gg: '',
+        cz: '',
+        sh: '',
+        ggdw: '',
+        scyl: '',
+        jjdw: '',
+      },
+      tableAmountData: [],
     }
   },
-  created() {
-    var link = document.getElementsByClassName('export')
-    console.log(link)
-  },
+  created() {},
   methods: {
+    handleSelectionChange(val) {
+      this.tableAmountData = val
+      console.log(this.tableAmountData)
+    },
+    modifyBOM() {
+      if (this.tableAmountData.length === 0) {
+        return
+      } else {
+        this.editForm = this.tableAmountData[0]
+        this.editBomDialogVisible = true
+      }
+    },
+    deleteBOM() {
+      this.tableList = this.tableList.filter((item) => {
+        return this.tableAmountData.indexOf(item) === -1
+      })
+    },
+    remove(index) {
+      this.tableList.splice(index, 1)
+    },
+    edit(data, index) {
+      console.log(data)
+      this.editForm = data
+      console.log(this.editForm)
+      this.editBomDialogVisible = true
+    },
+    exportData() {
+      let allColumns = this.tableTitle
+      var columnNames = []
+      var columnValues = []
+      for (var i = 0; i < allColumns.length; i++) {
+        columnNames[i] = allColumns[i].label
+        columnValues[i] = allColumns[i].prop
+      }
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('../../vendor/Export2Excel.js')
+        const tHeader = columnNames
+        const filterVal = columnValues
+        const list = this.tableList
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, 'BOM清单')
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) => filterVal.map((j) => v[j]))
+    },
     reset() {
       this.$refs.searchRef.resetFields()
     },

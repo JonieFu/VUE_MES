@@ -2,8 +2,8 @@
   <div class="container">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>质量管理</el-breadcrumb-item>
-      <el-breadcrumb-item>压敏电阻</el-breadcrumb-item>
+      <el-breadcrumb-item>物料管理</el-breadcrumb-item>
+      <el-breadcrumb-item>物料入库</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card
       ><el-form ref="libraryForm" :model="SearchForm" size="small">
@@ -372,8 +372,7 @@ export default {
     }
   },
   created() {
-    this.href = window.location.href
-    console.log(this.href)
+    
   },
   methods: {
     export() {},

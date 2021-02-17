@@ -105,11 +105,20 @@ export default {
       tableList: [
         {
           dictNum: '1',
-          dictLable: '用户性别',
+          dictLable: '男',
           dictKey: 0,
           dictSort: 1,
           dictStatus: 1,
           Note: '性别男',
+          dictTmie: '2020-12-23',
+        },
+        {
+          dictNum: '2',
+          dictLable: '女',
+          dictKey: 1,
+          dictSort: 1,
+          dictStatus: 1,
+          Note: '性别女',
           dictTmie: '2020-12-23',
         },
       ],

@@ -8,10 +8,9 @@
       <el-button type="info" @click="logout">退出</el-button>
     </el-header>
     <el-container>
-      <el-aside :width="isCollapse ? '60px' : '200px'">
-        <div @click="toggleCollapse">|||</div>
+      <el-aside class="aside" :width="computeAsideWidth">
+        <div class="logoToggle" @click="toggleCollapse">|||</div>
         <el-menu
-          style="width: 200px"
           :unique-opened="true"
           active-text-color="#409EFF"
           text-color="#fff"
@@ -42,13 +41,13 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main><router-view></router-view></el-main>
+      <el-main class="main"><router-view></router-view></el-main>
     </el-container>
   </el-container>
 </template>
 <script>
 export default {
-  components: {},
+  name: 'Home',
   data() {
     return {
       menulist: [
@@ -147,8 +146,11 @@ export default {
       activePath: '',
     }
   },
-  created() {
-    this.activePath = window.sessionStorage.getItem('activePath')
+  computed: {
+    computeAsideWidth() {
+      return this.isCollapse ? '64px' : '200px'
+      // return ''
+    },
   },
   methods: {
     saveNavState(activePath) {
@@ -164,12 +166,32 @@ export default {
       this.$router.push('/login')
     },
   },
+  created() {
+    this.activePath = window.sessionStorage.getItem('activePath')
+  },
+  mounted() {
+    const main = document.querySelector('.main')
+    const aside = document.querySelector('.aside')
+    let height = document.body.clientHeight
+    main.style.height = height - 60 + 'px'
+    aside.style.height = height - 60 + 'px'
+    window.addEventListener('resize', () => {
+      height = document.body.clientHeight
+      main.style.height = height - 60 + 'px'
+      aside.style.height = height - 60 + 'px'
+    })
+  },
 }
 </script>
 <style lang="scss" scoped>
 .home_container {
   height: 100%;
 }
+
+.holder::-webkit-scrollbar {
+  display: none;
+}
+
 .el-header {
   background: #373d41;
   display: flex;
@@ -192,13 +214,16 @@ export default {
 }
 .el-aside {
   background: #303440;
-  div {
+  .logoToggle {
     color: white;
     font-size: 10px;
     line-height: 24px;
-    text-align: center;
+    // text-align: center;
     letter-spacing: 0.2em;
     cursor: pointer;
+  }
+  .el-menu {
+    border-right: none;
   }
 }
 .iconfont {

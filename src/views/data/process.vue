@@ -38,6 +38,7 @@
             <el-button type="primary" size="small" @click="search"
               >搜索</el-button
             >
+
             <el-button type="warning" size="small" @click="reset"
               >重置</el-button
             >
@@ -52,7 +53,17 @@
             >
           </el-col>
           <el-col :span="1">
-            <el-button type="primary" size="mini">
+            <el-button type="primary" size="mini" @click="modifyProcess"
+              >修改</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button type="danger" size="mini" @click="deleteProcess"
+              >批量删除</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button type="primary" size="mini" style="margin-left: 25px">
               <a class="export">导出</a>
             </el-button>
           </el-col>
@@ -60,6 +71,7 @@
         <el-table
           :data="tableList"
           border
+          @selection-change="handleSelectionChange"
           :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
         >
           <el-table-column align="center" type="selection"></el-table-column>
@@ -96,7 +108,7 @@
           <el-table-column
             align="center"
             prop="zhgxr"
-            label="最后跟新人"
+            label="最后更新人"
           ></el-table-column>
           <el-table-column align="center" label="操作" width="200px">
             <template>
@@ -124,7 +136,6 @@
       :visible.sync="processDialogVisible"
       width="50%"
       append-to-body
-      @close="closeDialog"
     >
       <el-form
         :model="addProcessList"
@@ -175,6 +186,66 @@
         >
       </span>
     </el-dialog>
+    <el-dialog
+      title="修改工艺路线管理"
+      :visible.sync="editprocessDialogVisible"
+      width="50%"
+      append-to-body
+    >
+      <el-form
+        :model="editProcessList"
+        label-width="90px"
+        style="width: 80%; margin: auto"
+      >
+        <el-form-item label="流程代号" prop="process_code"
+          ><el-input
+            v-model="editProcessList.process_code"
+            placeholder=""
+          ></el-input
+        ></el-form-item>
+        <el-form-item label="线体描述" prop="xtms"
+          ><el-input v-model="editProcessList.xtms" placeholder=""></el-input
+        ></el-form-item>
+        <el-form-item label="流程绘制" prop="lchz"
+          ><el-input
+            v-model="editProcessList.lchz"
+            placeholder=""
+            clearable
+            @clear="clear"
+          >
+          </el-input>
+          <el-checkbox-group v-model="checkList" @change="checkboxChange">
+            <el-checkbox label="装配工序"></el-checkbox>
+            <el-checkbox label="测试工序"></el-checkbox>
+            <el-checkbox label="包装工序"></el-checkbox>
+            <el-checkbox label="集成测试工序"></el-checkbox>
+            <el-checkbox label="焊接"></el-checkbox>
+            <el-checkbox label="封胶工序"></el-checkbox>
+            <el-checkbox label="加酸工序"></el-checkbox>
+            <el-checkbox label="清洗工序"></el-checkbox>
+            <el-checkbox label="入库工序"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="创建人" prop="cjr"
+          ><el-input v-model="editProcessList.cjr" placeholder=""></el-input
+        ></el-form-item>
+        <el-form-item label="创建时间" prop="cjsj"
+          ><el-input v-model="editProcessList.cjsj" placeholder=""></el-input
+        ></el-form-item>
+        <el-form-item label="最后更新人" label-width="90px" prop="zhgxr"
+          ><el-input v-model="editProcessList.zhgxr" placeholder=""></el-input
+        ></el-form-item>
+        <el-form-item label="最后更新时间" label-width="90px" prop="zhcjsj"
+          ><el-input v-model="editProcessList.zhcjsj" placeholder=""></el-input
+        ></el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="processDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="processDialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -192,15 +263,26 @@ export default {
         {
           process_code: '1',
           xtms: '测试流程',
-          lchz: '装配-->测试工序-->集成测试工序-->焊接',
+          lchz: '装配工序→测试工序→集成测试工序→焊接',
           cjsj: '2020-12-9',
           cjr: 'admin',
           zhcjsj: '2020-12-23',
           zhgxr: 'admin',
         },
       ],
+      tableTitle: [],
+      editProcessList: {
+        process_code: '',
+        xtms: '',
+        lchz: '',
+        cjsj: '',
+        cjr: '',
+        zhcjsj: '',
+        zhgxr: '',
+      },
       currentPage: 1,
       processDialogVisible: false,
+      editprocessDialogVisible: false,
       addProcessList: {
         process_code: '',
         descript: '',
@@ -209,14 +291,11 @@ export default {
         newUser: '',
       },
       checkList: [],
+      tableAmountData: [],
     }
   },
   created() {},
   methods: {
-    closeDialog() {
-      this.$refs.addprocess.resetFields()
-      this.checkList = []
-    },
     clear() {
       console.log('清空')
       this.checkList = []
@@ -224,8 +303,21 @@ export default {
     addProcess() {
       this.processDialogVisible = true
     },
+    handleSelectionChange(val) {
+      this.tableAmountData = val
+      console.log(this.tableAmountData)
+    },
+    modifyProcess() {
+      if (this.tableAmountData.length === 0) {
+        return
+      } else {
+        this.editProcessList = this.tableAmountData[0]
+        this.editprocessDialogVisible = true
+      }
+    },
+    deleteProcess() {},
     reset() {
-      this.$refs.addprocess.resetFields()
+      this.$refs.searcDicthRef.resetFields()
     },
     search() {
       console.log('搜索')
@@ -233,16 +325,26 @@ export default {
     checkboxChange() {
       let str = ''
       if (this.checkList.length === 0) {
-        this.addProcessList.draws = ''
-        return
+        if (this.processDialogVisible === true) {
+          this.addProcessList.draws = ''
+          return
+        } else {
+          this.editProcessList.lchz = ''
+          return
+        }
       }
       this.checkList.forEach((item, index) => {
         if (index === this.checkList.length - 1) {
           str = str + item
-          this.addProcessList.draws = str
-          return
+          if (this.processDialogVisible === true) {
+            this.addProcessList.draws = str
+            return
+          } else {
+            this.editProcessList.lchz = str
+            return
+          }
         }
-        item = item + '-->'
+        item = item + '→'
         str = str + item
       })
     },

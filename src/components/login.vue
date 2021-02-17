@@ -72,7 +72,6 @@ export default {
     login() {
       this.$refs.loginForm.validate((valid) => {
         if (!valid) return
-        this.$message.success('提交表单成功')
         // 从后端获取数据
         // 将获取到的token值存储在本地
         // window.sessionStorage.setItem('token',res.data.token)
