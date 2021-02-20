@@ -63,7 +63,12 @@
             >
           </el-col>
           <el-col :span="1">
-            <el-button type="primary" size="mini" style="margin-left: 25px">
+            <el-button
+              type="primary"
+              size="mini"
+              style="margin-left: 25px"
+              @click="exportData"
+            >
               <a class="export">导出</a>
             </el-button>
           </el-col>
@@ -111,11 +116,19 @@
             label="最后更新人"
           ></el-table-column>
           <el-table-column align="center" label="操作" width="200px">
-            <template>
-              <el-button type="primary" icon="el-icon-edit" size="mini"
+            <template slot-scope="{ row, $index }">
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                size="mini"
+                @click="edit(row)"
                 >编辑</el-button
               >
-              <el-button type="danger" icon="el-icon-delete" size="mini"
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                @click="delet($index)"
                 >删除</el-button
               >
             </template>
@@ -208,9 +221,10 @@
         ></el-form-item>
         <el-form-item label="流程绘制" prop="lchz"
           ><el-input
+            class="haha"
             v-model="editProcessList.lchz"
             placeholder=""
-            clearable
+            disabled
             @clear="clear"
           >
           </el-input>
@@ -270,7 +284,15 @@ export default {
           zhgxr: 'admin',
         },
       ],
-      tableTitle: [],
+      tableTitle: [
+        { label: '流程代号', prop: 'process_code' },
+        { label: '线体描述', prop: 'xtms' },
+        { label: '流程绘制', prop: 'lchz' },
+        { label: '创建时间', prop: 'cjsj' },
+        { label: '创建人', prop: 'cjr' },
+        { label: '最后更新时间', prop: 'zhcjsj' },
+        { label: '最后更新人', prop: 'zhgxr' },
+      ],
       editProcessList: {
         process_code: '',
         xtms: '',
@@ -296,6 +318,26 @@ export default {
   },
   created() {},
   methods: {
+    exportData() {
+      let allColumns = this.tableTitle
+      var columnNames = []
+      var columnValues = []
+      for (var i = 0; i < allColumns.length; i++) {
+        columnNames[i] = allColumns[i].label
+        columnValues[i] = allColumns[i].prop
+      }
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('../../vendor/Export2Excel.js')
+        const tHeader = columnNames
+        const filterVal = columnValues
+        const list = this.tableList
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '工艺路线')
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) => filterVal.map((j) => v[j]))
+    },
     clear() {
       console.log('清空')
       this.checkList = []
@@ -313,9 +355,23 @@ export default {
       } else {
         this.editProcessList = this.tableAmountData[0]
         this.editprocessDialogVisible = true
+        this.checkList = this.editProcessList.lchz.split('→')
       }
     },
-    deleteProcess() {},
+    edit(row) {
+      this.editProcessList = row
+      this.checkList = this.editProcessList.lchz.split('→')
+      this.editprocessDialogVisible = true
+    },
+    deleteProcess() {
+      this.tableList = this.tableList.filter((item) => {
+        return this.tableAmountData.indexOf(item) === -1
+      })
+    },
+    delet(index) {
+      this.tableList.splice(index, 1)
+    },
+
     reset() {
       this.$refs.searcDicthRef.resetFields()
     },

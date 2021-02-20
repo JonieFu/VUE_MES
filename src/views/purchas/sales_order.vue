@@ -41,13 +41,29 @@
             >
           </el-col>
           <el-col :span="1">
-            <el-button type="primary" size="mini">
-              <a class="export" href="" download="haha.html">导出</a>
+            <el-button type="primary" size="mini" @click="modifySalesOrder"
+              >修改</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button type="danger" size="mini" @click="deleteSalesOrder"
+              >批量删除</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button
+              type="primary"
+              size="mini"
+              style="margin-left: 24px"
+              @click="exportData"
+            >
+              导出
             </el-button>
           </el-col>
         </el-row>
         <el-table
           :data="tableList"
+          @selection-change="handleSelectionChange"
           :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
         >
           <el-table-column align="center" type="selection"></el-table-column>
@@ -63,7 +79,7 @@
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="xsddmc"
+            prop="zhtmc"
             label="子合同名称"
           ></el-table-column>
           <el-table-column
@@ -153,12 +169,13 @@
             label="来源数据创建时间"
           ></el-table-column>
           <el-table-column align="center" label="操作" width="150px">
-            <template slot-scope="">
+            <template slot-scope="{ row }">
               <el-button
                 type="primary"
                 icon="el-icon-edit"
                 size="mini"
                 style="width: 50px; padding: 7px 0"
+                @click="edit(row, $index)"
                 >编辑</el-button
               >
               <el-button
@@ -166,6 +183,7 @@
                 icon="el-icon-delete"
                 size="mini"
                 style="width: 50px; padding: 7px 0"
+                @click="delet($index)"
                 >删除</el-button
               >
             </template>
@@ -247,9 +265,9 @@
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="子合同状态" prop="zhtzt"
+          <el-form-item label="销售订单状态" prop="xsddzt"
             ><el-input
-              v-model="addsaleslist.zhtzt"
+              v-model="addsaleslist.xsddzt"
               style="width: 90%"
             ></el-input>
           </el-form-item>
@@ -259,9 +277,9 @@
               style="width: 90%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="销售订单行项目ID" prop="xsddhxmId"
+          <el-form-item label="采购订单行项目ID" prop="cgddhxmid"
             ><el-input
-              v-model="addsaleslist.xsddhxmId"
+              v-model="addsaleslist.cgddhxmid"
               style="width: 90%"
             ></el-input>
           </el-form-item>
@@ -320,6 +338,146 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="修改子合同"
+      :visible.sync="editSalesDialogVisible"
+      width="50%"
+    >
+      <div class="el-dialog-div">
+        <el-form
+          ref="form"
+          :model="editsaleslist"
+          label-width="150px"
+          size="small"
+        >
+          <el-form-item label="采购方总部编码" prop="cgfzbbm"
+            ><el-input
+              v-model="editsaleslist.cgfzbbm"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="子合同编号" prop="zhtbh"
+            ><el-input
+              v-model="editsaleslist.zhtbh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="子合同名称" prop="zhtmc"
+            ><el-input
+              v-model="editsaleslist.zhtmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供应航编码" prop="gysbm"
+            ><el-input
+              v-model="editsaleslist.gysbm"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="采购方公司编码" prop="cgfgsbm"
+            ><el-input
+              v-model="editsaleslist.cgfgsbm"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="采购方公司名称" prop="cgfgsmc"
+            ><el-input
+              v-model="editsaleslist.cgfgsmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="采购方公司省份" prop="cgfgssf"
+            ><el-input
+              v-model="editsaleslist.cgfgssf"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="品类编码" prop="plbm"
+            ><el-input
+              v-model="editsaleslist.plbm"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="种类编码" prop="zlbm"
+            ><el-input
+              v-model="editsaleslist.zlbm"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="销售订单状态" prop="xsddzt"
+            ><el-input
+              v-model="editsaleslist.xsddzt"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="销售订单行项目号" prop="xsddhxmh"
+            ><el-input
+              v-model="editsaleslist.xsddhxmh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="采购订单行项目ID" prop="cgddhxmid"
+            ><el-input
+              v-model="editsaleslist.cgddhxmid"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="物资编码" prop="wzbm"
+            ><el-input
+              v-model="editsaleslist.wzbm"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="物资名称" prop="wzmc"
+            ><el-input
+              v-model="editsaleslist.wzmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="物资单位" prop="wzdw"
+            ><el-input
+              v-model="editsaleslist.wzdw"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="物资数量" prop="wzsl"
+            ><el-input
+              v-model="editsaleslist.wzsl"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="数据拥有方" prop="sjyyf"
+            ><el-input
+              v-model="editsaleslist.sjyyf"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="数据可见方" prop="sjkjf"
+            ><el-input
+              v-model="editsaleslist.sjkjf"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="数据来源" prop="sjly"
+            ><el-input
+              v-model="editsaleslist.sjly"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="来源数据创建时间" prop="lysjcjsj"
+            ><el-input
+              v-model="editsaleslist.lysjcjsj"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addBomDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -335,8 +493,8 @@ export default {
       tableList: [
         {
           cgfzbbm: '1',
-          xsddh: '2323232343',
-          xsddmc: '34567',
+          zhtbh: '2323232343',
+          zhtmc: '34567',
           gysbm: '1234',
           cgfgsbm: 'djfa',
           cgfgsmc: 'dsfd',
@@ -357,16 +515,16 @@ export default {
         },
       ],
       addsaleslist: {
-        cgfzbbm: 'qw',
-        xsddh: '',
-        xsddmc: '',
+        cgfzbbm: '',
+        zhtbh: '',
+        zhtmc: '',
         gysbm: '',
         cgfgsbm: '',
         cgfgsmc: '',
         cgfgssf: '',
         plbm: '',
         zlbm: '',
-        zhtzt: 1,
+        xsddzt: '',
         xsddhxmh: '',
         cgddhxmid: '',
         wzbm: '',
@@ -379,19 +537,108 @@ export default {
         lysjcjsj: '',
       },
       currentPage: 1,
-      href: '',
+      editsaleslist: {
+        cgfzbbm: '',
+        zhtbh: '',
+        zhtmc: '',
+        gysbm: '',
+        cgfgsbm: '',
+        cgfgsmc: '',
+        cgfgssf: '',
+        plbm: '',
+        zlbm: '',
+        xsddzt: '',
+        xsddhxmh: '',
+        cgddhxmid: '',
+        wzbm: '',
+        wzmc: '',
+        wzdw: '',
+        wzsl: '',
+        sjyyf: '',
+        sjkjf: '',
+        sjly: '',
+        lysjcjsj: '',
+      },
+      tableTitle: [
+        { label: '采购方总部编码', prop: 'cgfzbbm' },
+        { label: '子合同编号', prop: 'zhtbh' },
+        { label: '子合同名称', prop: 'zhtmc' },
+        { label: '供应商编码', prop: 'gysbm' },
+        { label: '采购方公司编码', prop: 'cgfgsbm' },
+        { label: '采购方公司名称', prop: 'cgfgsmc' },
+        { label: '采购方公司省份', prop: 'cgfgssf' },
+        { label: '品类编码', prop: 'plbm' },
+        { label: '种类编码', prop: 'zlbm' },
+        { label: '销售订单状态', prop: 'xsddzt' },
+        { label: '销售订单行项目号', prop: 'xsddhxmh' },
+        { label: '采购订单行项目ID', prop: 'cgddhxmid' },
+        { label: '物资编码', prop: 'wzbm' },
+        { label: '物资名称', prop: 'wzmc' },
+        { label: '物资单位', prop: 'wzdw' },
+        { label: '物资数量', prop: 'wzsl' },
+        { label: '数据拥有方', prop: 'sjyyf' },
+        { label: '数据可见方', prop: 'sjkjf' },
+        { label: '数据来源', prop: 'sjly' },
+        { label: '来源数据创建时间', prop: 'lysjcjsj' },
+      ],
       addSalesDialogVisible: false,
+      editSalesDialogVisible: false,
+      tableAmountData: [],
     }
   },
   created() {},
   methods: {
+    modifySalesOrder() {
+      if (this.tableAmountData.length === 0) {
+        return
+      } else {
+        this.editsaleslist = this.tableAmountData[0]
+        this.editSalesDialogVisible = true
+      }
+    },
+    deleteSalesOrder() {
+      this.tableList = this.tableList.filter((item) => {
+        return this.tableAmountData.indexOf(item) === -1
+      })
+    },
+    exportData() {
+      let allColumns = this.tableTitle
+      var columnNames = []
+      var columnValues = []
+      for (var i = 0; i < allColumns.length; i++) {
+        columnNames[i] = allColumns[i].label
+        columnValues[i] = allColumns[i].prop
+      }
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('../../vendor/Export2Excel.js')
+        const tHeader = columnNames
+        const filterVal = columnValues
+        const list = this.tableList
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '子合同')
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) => filterVal.map((j) => v[j]))
+    },
     addsales() {
       this.addSalesDialogVisible = true
+    },
+    handleSelectionChange(val) {
+      this.tableAmountData = val
+      console.log(this.tableAmountData)
+    },
+    edit(data) {
+      this.editsaleslist = data
+      this.editSalesDialogVisible = true
+    },
+    delet(index) {
+      this.tableList.splice(index, 1)
     },
     submit() {
       this.addSalesDialogVisible = false
     },
-    export() {},
+
     search() {},
     reset() {
       this.$refs.purchasForm.resetFields()

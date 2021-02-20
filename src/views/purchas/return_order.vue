@@ -40,16 +40,34 @@
       <el-card>
         <el-row>
           <el-col :span="1">
-            <el-button type="primary" size="mini">添加</el-button>
+            <el-button type="primary" size="mini" @click="addReturnOrder"
+              >添加</el-button
+            >
           </el-col>
           <el-col :span="1">
-            <el-button type="primary" size="mini">
-              <a class="export" href="" download="haha.html">导出</a>
+            <el-button type="primary" size="mini" @click="modifyReturnOrder"
+              >修改</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button type="danger" size="mini" @click="deleteReturnOrder"
+              >批量删除</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="exportData"
+              style="margin-left: 24px"
+            >
+              导出
             </el-button>
           </el-col>
         </el-row>
         <el-table
           :data="tableList"
+          @selection-change="handleSelectionChange"
           :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
         >
           <el-table-column align="center" type="selection"></el-table-column>
@@ -169,12 +187,13 @@
             label="备注"
           ></el-table-column>
           <el-table-column align="center" label="操作" width="150px">
-            <template slot-scope="">
+            <template slot-scope="{ row, $index }">
               <el-button
                 type="primary"
                 icon="el-icon-edit"
                 size="mini"
                 style="width: 50px; padding: 7px 0"
+                @click="edit(row)"
                 >编辑</el-button
               >
               <el-button
@@ -182,6 +201,7 @@
                 icon="el-icon-delete"
                 size="mini"
                 style="width: 50px; padding: 7px 0"
+                @click="delet($index)"
                 >删除</el-button
               >
             </template>
@@ -197,6 +217,325 @@
         </el-pagination>
       </el-card>
     </el-card>
+
+    <el-dialog
+      title="添加采购单"
+      :visible.sync="addReturnOrderVisibleDialog"
+      width="50%"
+    >
+      <div class="el-dialog-div">
+        <el-form
+          ref="form"
+          :model="addReturnOrderList"
+          label-width="150px"
+          size="small"
+        >
+          <el-form-item label="采购单号" prop="cgdh"
+            ><el-input
+              v-model="addReturnOrderList.cgdh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="采购单名称" prop="cgdmc"
+            ><el-input
+              v-model="addReturnOrderList.cgdmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM编号" prop="bombh"
+            ><el-input
+              v-model="addReturnOrderList.bombh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM物料名称" prop="wlmc"
+            ><el-input
+              v-model="addReturnOrderList.wlmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM规格型号" prop="ggxh"
+            ><el-input
+              v-model="addReturnOrderList.ggxh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM色号" prop="sh"
+            ><el-input
+              v-model="addReturnOrderList.sh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM材质" prop="cz"
+            ><el-input
+              v-model="addReturnOrderList.cz"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM规格单位" prop="ggdw"
+            ><el-input
+              v-model="addReturnOrderList.ggdw"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM生产用量" prop="scyl"
+            ><el-input
+              v-model="addReturnOrderList.scyl"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM计价单位" prop="jjdw"
+            ><el-input
+              v-model="addReturnOrderList.jjdw"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="需采购数量" prop="xcgsl"
+            ><el-input
+              v-model="addReturnOrderList.xcgsl"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供货单位" prop="ghdw"
+            ><el-input
+              v-model="addReturnOrderList.ghdw"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供货日期" prop="ghrq"
+            ><el-input
+              v-model="addReturnOrderList.ghrq"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="交货日期" prop="jhrq"
+            ><el-input
+              v-model="addReturnOrderList.jhrq"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供应商联系人" prop="ghlxr"
+            ><el-input
+              v-model="addReturnOrderList.ghlxr"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供应商联系电话" prop="ghslxdh"
+            ><el-input
+              v-model="addReturnOrderList.ghslxdh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="收货地址" prop="shdz"
+            ><el-input
+              v-model="addReturnOrderList.shdz"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="销售订单号" prop="xsddh"
+            ><el-input
+              v-model="addReturnOrderList.xsddh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="销售订单名称" prop="xsddmc"
+            ><el-input
+              v-model="addReturnOrderList.xsddmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="创建时间" prop="cjsj"
+            ><el-input
+              v-model="addReturnOrderList.cjsj"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="创建人" prop="cjr"
+            ><el-input
+              v-model="addReturnOrderList.cjr"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="更新时间" prop="gxsj"
+            ><el-input
+              v-model="addReturnOrderList.gxsj"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="备注" prop="bz"
+            ><el-input
+              v-model="addReturnOrderList.bz"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addReturnOrderVisibleDialog = false"
+          >取 消</el-button
+        >
+        <el-button type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="修改采购单"
+      :visible.sync="editReturnOrderVisibleDialog"
+      width="50%"
+    >
+      <div class="el-dialog-div">
+        <el-form
+          ref="form"
+          :model="editReturnOrderList"
+          label-width="150px"
+          size="small"
+        >
+          <el-form-item label="采购单号" prop="cgdh"
+            ><el-input
+              v-model="editReturnOrderList.cgdh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="采购单名称" prop="cgdmc"
+            ><el-input
+              v-model="editReturnOrderList.cgdmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM编号" prop="bombh"
+            ><el-input
+              v-model="editReturnOrderList.bombh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM物料名称" prop="wlmc"
+            ><el-input
+              v-model="editReturnOrderList.wlmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM规格型号" prop="ggxh"
+            ><el-input
+              v-model="editReturnOrderList.ggxh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM色号" prop="sh"
+            ><el-input
+              v-model="editReturnOrderList.sh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM材质" prop="cz"
+            ><el-input
+              v-model="editReturnOrderList.cz"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM规格单位" prop="ggdw"
+            ><el-input
+              v-model="editReturnOrderList.ggdw"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM生产用量" prop="scyl"
+            ><el-input
+              v-model="editReturnOrderList.scyl"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="BOM计价单位" prop="jjdw"
+            ><el-input
+              v-model="editReturnOrderList.jjdw"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="需采购数量" prop="xcgsl"
+            ><el-input
+              v-model="editReturnOrderList.xcgsl"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供货单位" prop="ghdw"
+            ><el-input
+              v-model="editReturnOrderList.ghdw"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供货日期" prop="ghrq"
+            ><el-input
+              v-model="editReturnOrderList.ghrq"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="交货日期" prop="jhrq"
+            ><el-input
+              v-model="editReturnOrderList.jhrq"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供应商联系人" prop="ghlxr"
+            ><el-input
+              v-model="editReturnOrderList.ghlxr"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供应商联系电话" prop="ghslxdh"
+            ><el-input
+              v-model="editReturnOrderList.ghslxdh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="收货地址" prop="shdz"
+            ><el-input
+              v-model="editReturnOrderList.shdz"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="销售订单号" prop="xsddh"
+            ><el-input
+              v-model="editReturnOrderList.xsddh"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="销售订单名称" prop="xsddmc"
+            ><el-input
+              v-model="editReturnOrderList.xsddmc"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="创建时间" prop="cjsj"
+            ><el-input
+              v-model="editReturnOrderList.cjsj"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="创建人" prop="cjr"
+            ><el-input
+              v-model="editReturnOrderList.cjr"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="更新时间" prop="gxsj"
+            ><el-input
+              v-model="editReturnOrderList.gxsj"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="备注" prop="bz"
+            ><el-input
+              v-model="editReturnOrderList.bz"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editReturnOrderVisibleDialog = false"
+          >取 消</el-button
+        >
+        <el-button type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -237,15 +576,91 @@ export default {
         },
       ],
       currentPage: 1,
-      href: '',
+      addReturnOrderVisibleDialog: false,
+      editReturnOrderVisibleDialog: false,
+      addReturnOrderList: {
+        cgdh: '',
+        cgdmc: '',
+        bombh: '',
+        wlmc: '',
+        ggxh: '',
+        sh: '',
+        cz: '',
+        ggdw: '',
+        scyl: '',
+        jjdw: '',
+        xcgsl: '',
+        ghdw: '',
+        ghrq: '',
+        jhrq: '',
+        ghlxr: '',
+        ghslxdh: '',
+        shdz: '',
+        xsddh: '',
+        xsddmc: '',
+        cjsj: '',
+        cjr: '',
+        gxsj: '',
+        bz: '',
+      },
+      editReturnOrderList: {
+        cgdh: '',
+        cgdmc: '',
+        bombh: '',
+        wlmc: '',
+        ggxh: '',
+        sh: '',
+        cz: '',
+        ggdw: '',
+        scyl: '',
+        jjdw: '',
+        xcgsl: '',
+        ghdw: '',
+        ghrq: '',
+        jhrq: '',
+        ghlxr: '',
+        ghslxdh: '',
+        shdz: '',
+        xsddh: '',
+        xsddmc: '',
+        cjsj: '',
+        cjr: '',
+        gxsj: '',
+        bz: '',
+      },
+      tableAmountData: [],
     }
   },
-  created() {
-    this.href = window.location.href
-    console.log(this.href)
-  },
+  created() {},
   methods: {
-    export() {},
+    handleSelectionChange(val) {
+      this.tableAmountData = val
+    },
+    addReturnOrder() {
+      this.addReturnOrderVisibleDialog = true
+    },
+    modifyReturnOrder() {
+      if (this.tableAmountData.length === 0) {
+        return
+      } else {
+        this.editReturnOrderList = this.tableAmountData[0]
+        this.editReturnOrderVisibleDialog = true
+      }
+    },
+    deleteReturnOrder() {
+      this.tableList = this.tableList.filter((item) => {
+        return this.tableAmountData.indexOf(item) === -1
+      })
+    },
+    edit(row) {
+      this.editReturnOrderList = row
+      this.editReturnOrderVisibleDialog = true
+    },
+    delet(index) {
+      this.tableList.splice(index, 1)
+    },
+
+    exportData() {},
     search() {},
     reset() {
       this.$refs.purchasForm.resetFields()

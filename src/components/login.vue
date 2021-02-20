@@ -3,8 +3,10 @@
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avator_box">
-        <img src="../assets/logo.png" alt="" />
+        <!-- <img src="../assets/logo.png" alt="" /> -->
+        <img src="../assets/erp.png" alt="" />
       </div>
+      <h4>ERP管理系统</h4>
       <el-form
         :model="loginForm"
         :rules="loginFormRules"
@@ -85,6 +87,10 @@ export default {
 .login_container {
   background: #2b4b6b;
   height: 100%;
+  h4 {
+    text-align: center;
+    margin-top: 70px;
+  }
   .login_box {
     width: 450px;
     height: 300px;

@@ -45,13 +45,24 @@
             >
           </el-col>
           <el-col :span="1">
-            <el-button type="primary" size="mini">
-              <a class="export" href="" download="haha.html">导出</a>
+            <el-button type="primary" size="mini" @click="modifyRaw"
+              >修改</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button type="danger" size="mini" @click="deleteRaw"
+              >批量删除</el-button
+            >
+          </el-col>
+          <el-col :span="1">
+            <el-button type="primary" size="mini" style="margin-left: 24px">
+              导出
             </el-button>
           </el-col>
         </el-row>
         <el-table
           :data="tableList"
+          @selection-change="handleSelectionChange"
           :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
         >
           <el-table-column align="center" type="selection"></el-table-column>
@@ -202,6 +213,59 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="添加重点原材料"
+      :visible.sync="editRawDialogVisible"
+      width="50%"
+    >
+      <div class="el-dialog-div">
+        <el-form ref="rawform" :model="editrawForm" label-width="130px">
+          <el-form-item label="采购方总部编码" prop="cgfzbbm"
+            ><el-input v-model="editrawForm.cgfzbbm" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="供应商名称" prop="gysmc"
+            ><el-input v-model="editrawForm.gysmc" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="供应商编码" prop="gysbm"
+            ><el-input v-model="editrawForm.gysbm" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="原材料名称" prop="yclmc"
+            ><el-input v-model="editrawForm.yclmc" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="原材料单位" prop="ycldw"
+            ><el-input v-model="editrawForm.ycldw" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="原材料描述" prop="yclms"
+            ><el-input v-model="editrawForm.yclms" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="原材料供应商" prop="yclgys"
+            ><el-input v-model="editrawForm.yclgys" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="原材料制造商" prop="yclzzs"
+            ><el-input v-model="editrawForm.yclzzs" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="品类" prop="pl"
+            ><el-input v-model="editrawForm.pl" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="种类" prop="zl"
+            ><el-input v-model="editrawForm.zl" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="数据来源" prop="sjly"
+            ><el-input v-model="editrawForm.sjly" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="来源数据创建时间" prop="lysjcjsj"
+            ><el-input v-model="editrawForm.lysjcjsj" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="数据可见方" prop="sjkjf"
+            ><el-input v-model="editrawForm.sjkjf" placeholder=""></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addBomDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -235,6 +299,7 @@ export default {
       currentPage: 1,
       href: '',
       addRawDialogVisible: false,
+      editRawDialogVisible: false,
       addrawForm: {
         cgfzbbm: '',
         gysmc: '',
@@ -250,6 +315,22 @@ export default {
         lysjcjsj: '',
         sjkjf: '',
       },
+      editrawForm: {
+        cgfzbbm: '',
+        gysmc: '',
+        gysbm: '',
+        yclmc: '',
+        ycldw: '',
+        yclms: '',
+        yclgys: '',
+        yclzzs: '',
+        pl: '',
+        zl: '',
+        sjly: '',
+        lysjcjsj: '',
+        sjkjf: '',
+      },
+      tableAmountData: [],
     }
   },
   created() {
@@ -257,7 +338,18 @@ export default {
     console.log(this.href)
   },
   methods: {
-    export() {},
+    modifyRaw() {
+      if (this.tableAmountData.length === 0) {
+        return
+      } else {
+        this.editrawForm = this.tableAmountData[0]
+        this.editRawDialogVisible = true
+      }
+    },
+    handleSelectionChange(val) {
+      this.tableAmountData = val
+      console.log(this.tableAmountData)
+    },
     search() {},
     reset() {
       this.$refs.rawForm.resetFields()

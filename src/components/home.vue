@@ -148,8 +148,7 @@ export default {
   },
   computed: {
     computeAsideWidth() {
-      return this.isCollapse ? '64px' : '200px'
-      // return ''
+      return this.isCollapse ? '75px' : '240px'
     },
   },
   methods: {
@@ -214,11 +213,13 @@ export default {
 }
 .el-aside {
   background: #303440;
+  overflow-y: scroll;
+  overflow-x: hidden;
   .logoToggle {
     color: white;
     font-size: 10px;
     line-height: 24px;
-    // text-align: center;
+    text-align: center;
     letter-spacing: 0.2em;
     cursor: pointer;
   }
