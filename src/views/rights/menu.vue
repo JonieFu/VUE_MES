@@ -75,6 +75,14 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="100"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="29"
+      >
+      </el-pagination>
     </el-card>
   </div>
 </template>

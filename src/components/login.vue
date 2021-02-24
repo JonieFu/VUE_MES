@@ -3,10 +3,10 @@
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avator_box">
-        <!-- <img src="../assets/logo.png" alt="" /> -->
-        <img src="../assets/erp.png" alt="" />
+        <img src="../assets/logo.png" alt="" />
+        <!-- <img src="../assets/erp.png" alt="" /> -->
       </div>
-      <h4>ERP管理系统</h4>
+      <h4>MES管理系统</h4>
       <el-form
         :model="loginForm"
         :rules="loginFormRules"
@@ -15,7 +15,7 @@
       >
         <el-form-item prop="username">
           <el-input
-            prefix-icon="iconfont icon-user-filling"
+            prefix-icon="el-icon-user"
             v-model="loginForm.username"
             clearable
           >
@@ -23,7 +23,7 @@
         </el-form-item>
         <el-form-item label="" prop="password">
           <el-input
-            prefix-icon="iconfont icon-lock"
+            prefix-icon="el-icon-lock"
             v-model="loginForm.password"
             type="password"
             clearable
@@ -35,6 +35,7 @@
           <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
       </el-form>
+      <div class="footer">北京京仪北方仪器仪表有限公司</div>
     </div>
   </div>
 </template>
@@ -122,16 +123,26 @@ export default {
         height: 100%;
       }
     }
+    form.el-form.login_form {
+      height: 190px;
+    }
     .login_form {
       position: absolute;
+      margin-top: -10px;
       bottom: 0;
       width: 100%;
-      padding: 0 20px;
+      padding: 0 30px;
       box-sizing: border-box;
     }
+
     .btn {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
+    }
+    .footer {
+      font-size: 10px;
+      text-align: center;
+      margin-top: 185px;
     }
   }
 }

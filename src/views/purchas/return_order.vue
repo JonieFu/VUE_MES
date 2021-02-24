@@ -629,6 +629,30 @@ export default {
         bz: '',
       },
       tableAmountData: [],
+      tableTitle: [
+        { label: '采购单号', prop: 'cgdh' },
+        { label: '采购单名称', prop: 'cgdmc' },
+        { label: 'BOM编号', prop: 'bombh' },
+        { label: 'BOM物料名称', prop: 'wlmc' },
+        { label: 'BOM规格型号', prop: 'ggxh' },
+        { label: 'BOM色号', prop: 'sh' },
+        { label: 'BOM材质', prop: 'cz' },
+        { label: 'BOM规格单位', prop: 'ggdw' },
+        { label: 'BOM生产用量', prop: 'scyl' },
+        { label: 'BOM计价单位', prop: 'jjdw' },
+        { label: '需采购数量', prop: 'xcgsl' },
+        { label: '供货单位', prop: 'ghdw' },
+        { label: '供货日期', prop: 'ghrq' },
+        { label: '交货日期', prop: 'jhrq' },
+        { label: '供货商联系人', prop: 'ghlxr' },
+        { label: '供货商联系电话', prop: 'ghslxdh' },
+        { label: '收货地址', prop: 'shdz' },
+        { label: '销售订单号', prop: 'xsddh' },
+        { label: '销售订单名称', prop: 'xsddmc' },
+        { label: '创建时间', prop: 'cjsj' },
+        { label: '创建人', prop: 'cjr' },
+        { label: '备注', prop: 'bz' },
+      ],
     }
   },
   created() {},
@@ -660,7 +684,36 @@ export default {
       this.tableList.splice(index, 1)
     },
 
-    exportData() {},
+    exportData() {
+      if (this.tableAmountData.length === 0) {
+        this.$message({
+          message: '请选择要导出数据',
+          type: 'warning',
+        })
+        return
+      } else {
+        let allColumns = this.tableTitle
+        var columnNames = []
+        var columnValues = []
+        for (var i = 0; i < allColumns.length; i++) {
+          columnNames[i] = allColumns[i].label
+          columnValues[i] = allColumns[i].prop
+        }
+        require.ensure([], () => {
+          const {
+            export_json_to_excel,
+          } = require('../../vendor/Export2Excel.js')
+          const tHeader = columnNames
+          const filterVal = columnValues
+          const list = this.tableAmountData
+          const data = this.formatJson(filterVal, list)
+          export_json_to_excel(tHeader, data, '退货单')
+        })
+      }
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) => filterVal.map((j) => v[j]))
+    },
     search() {},
     reset() {
       this.$refs.purchasForm.resetFields()

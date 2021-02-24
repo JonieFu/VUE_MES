@@ -602,21 +602,31 @@ export default {
       })
     },
     exportData() {
-      let allColumns = this.tableTitle
-      var columnNames = []
-      var columnValues = []
-      for (var i = 0; i < allColumns.length; i++) {
-        columnNames[i] = allColumns[i].label
-        columnValues[i] = allColumns[i].prop
+      if (this.tableAmountData.length === 0) {
+        this.$message({
+          message: '请选择要导出数据',
+          type: 'warning',
+        })
+        return
+      } else {
+        let allColumns = this.tableTitle
+        var columnNames = []
+        var columnValues = []
+        for (var i = 0; i < allColumns.length; i++) {
+          columnNames[i] = allColumns[i].label
+          columnValues[i] = allColumns[i].prop
+        }
+        require.ensure([], () => {
+          const {
+            export_json_to_excel,
+          } = require('../../vendor/Export2Excel.js')
+          const tHeader = columnNames
+          const filterVal = columnValues
+          const list = this.tableAmountData
+          const data = this.formatJson(filterVal, list)
+          export_json_to_excel(tHeader, data, '子合同')
+        })
       }
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('../../vendor/Export2Excel.js')
-        const tHeader = columnNames
-        const filterVal = columnValues
-        const list = this.tableList
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '子合同')
-      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map((v) => filterVal.map((j) => v[j]))
